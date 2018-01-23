@@ -1,5 +1,5 @@
-#JavaScript模拟GameBoy：CPU
-
+#JavaScript模拟GameBoy: CPU
+##前言
 这是《JavaScript模拟GameBoy》系列文章的第一篇。目前我已经完成了前十篇，其余的我将会继续跟进。
 
 1. CPU
