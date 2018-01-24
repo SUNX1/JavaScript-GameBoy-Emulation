@@ -1,19 +1,4 @@
 #JavaScript模拟GameBoy: CPU
-##前言
-这是《JavaScript模拟GameBoy》系列文章的第一篇。目前我已经完成了前十篇，其余的我将会继续跟进。
-
-1. CPU
-2. 内存（Memory）
-3. GPU Timings
-4. 图像（Graphics）
-5. Integration
-6. 输入
-7. Sprites
-8. 中断（Interrupts）
-9. 内存持久化（Memory Banking）
-10. 计时器（Timers）
-
-本系列文章的模拟器代码可以在Github查看：[http://github.com/Two9A/jsGB](http://github.com/Two9A/jsGB)
 
 JavaScript通常被描述为专门为实现网站动态交互而设计的语言，其实JavaScript是一个完整的面相对象编程语言，除了Web以外还应用于其他领域，比如Windows和MacOS最新版本的Widget就是JavaScript实现的，Mozilla应用程序套件的GUI同样如此。
 
