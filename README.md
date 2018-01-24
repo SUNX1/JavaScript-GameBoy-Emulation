@@ -1,6 +1,6 @@
 [GameBoy Emulation in JavaScript](http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-The-CPU)系列文章的翻译，目前共十篇。专业及翻译水平有限，翻译有误或不恰当的地方欢迎提交issues或pull request，也可以发邮件联系我。
 
-1. [中央处理器（CPU）](./JavaScript模拟GameBoy- CPU.md)
+1. [中央处理器（CPU）](/JavaScript模拟GameBoy-CPU.md)
 2. 内存（Memory）
 3. GPU Timings
 4. 图像（Graphics）
