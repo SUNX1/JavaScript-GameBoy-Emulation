@@ -15,7 +15,7 @@
 也可以参考[https://github.com/endrift/gbajs](https://github.com/endrift/gbajs)
 
 作者：Imran Nazar <tf@imrannazar.com>
-翻译：SUNX <sunx@2013.cqut.edu.cn>
+翻译：SUNX <me@sunx.site>
 原文：[GameBoy Emulation in JavaScript](http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-The-CPU)
 
 仅供参考学习，著作权归原作者Imran Nazar所有，商业转载请联系原作者获得授权。
