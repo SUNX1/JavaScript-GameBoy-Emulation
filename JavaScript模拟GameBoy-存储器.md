@@ -129,7 +129,34 @@
         }
     };
     
-    
+在上面的代码中，应该注意0xFF00到0xFF7F之间的内存区域是未处理的。这些位置被用作提供I/O的各种芯片的内存映射I/O，其含义将在后面部分涉及到时介绍。
 
-TODO
+写字节的处理方式非常相似。每个操作都是相反的，并且值被写入内存的各种区域，而不是从函数中被返回。
+
+##加载ROM
+就像CPU模拟如果没有内存访问、图形等基本部分的支持就毫无意义一样，不能加载程序的话，从内存中读取程序同样没什么用。将程序装载到模拟器主要由两种方法：将其直接硬编码到模拟器代码中，或者允许从其他位置加载ROM文件。硬编码进程序明显的缺点是ROM是固定的，不容易更换。
+
+在我们的JavaScript模拟器中，因为GameBoy的BIOS不会改变，所以BIOS被硬编码在MMU中。程序文件是在模拟器初始化之后异步加载的，这一步可以通过XMLHTTP或者Andy Na's BinFileReader之类的二进制文件读取器来完成，最终得到一个包含ROM文件的字符串。
+
+    MMU.js: 加载ROM文件
+    MMU.load = function(file)
+    {
+        var b = new BinFileReader(file);
+        MMU._rom = b.readString(b.getFileSize(), 0);
+    };
+
+由于ROM文件被保存为字符串而不是整型数组，rb和wb函数必须改成字符串索引：
+
+    MMU.js: ROM文件索引
+    	    case 0x1000:
+    	    case 0x2000:
+    	    case 0x3000:
+    	        return MMU._rom.charCodeAt(addr);
+
+##下一步
+当CPU和MMU完成后，我们可以看到程序一步步的被执行：获得一个模拟器，并且在正确的寄存器中生成预期的值。现在还缺少的是图像输出，在本系列的下一篇将讨论图形的问题，包括GameBoy如何构建其图形输出，以及如何将图形渲染到屏幕上。
+
+
+> 原文链接：[GameBoy Emulation in JavaScript: Memory](http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-Memory)
+
 
