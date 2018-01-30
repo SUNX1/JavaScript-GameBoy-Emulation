@@ -43,6 +43,7 @@ GameBoy背景的另一个难题是从图块数据到最终显示之间的调色�
 | 1 | 33% on | [192, 192, 192] |
 | 2 | 66% on | [96, 96, 96] |
 | 3 | On | [0, 0, 0] |
+
 表2：颜色相关值
 
 ![http://imrannazar.com/content/img/jsgb-gpu-bg-pal.png](http://imrannazar.com/content/img/jsgb-gpu-bg-pal.png)
