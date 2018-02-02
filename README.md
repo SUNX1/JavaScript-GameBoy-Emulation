@@ -2,11 +2,11 @@
 
 1. [中央处理器（CPU）](/JavaScript模拟GameBoy-CPU.md)
 2. [存储器（Memory）](/JavaScript模拟GameBoy-存储器.md)
-3. [GPU时序(Timings)](/JavaScript模拟GameBoy-GPU时序.md)
+3. [GPU时序（GPU Timings）](/JavaScript模拟GameBoy-GPU时序.md)
 4. [图形（Graphics）](/JavaScript模拟GameBoy-图形.md)
 5. [整合（Integration）](/JavaScript模拟GameBoy-整合.md)
-6. 输入（Input）
-7. Sprites
+6. [输入（Input）](/JavaScript模拟GameBoy-输入.md)
+7. 精灵（Sprites）
 8. 中断（Interrupts）
 9. 内存持久化（Memory Banking）
 10. 计时器（Timers）
