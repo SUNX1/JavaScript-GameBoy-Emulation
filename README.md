@@ -6,7 +6,7 @@
 4. [图形（Graphics）](/JavaScript模拟GameBoy-图形.md)
 5. [整合（Integration）](/JavaScript模拟GameBoy-整合.md)
 6. [输入（Input）](/JavaScript模拟GameBoy-输入.md)
-7. 精灵（Sprites）
+7. [精灵（Sprites）](/JavaScript模拟GameBoy-精灵.md)
 8. 中断（Interrupts）
 9. 内存持久化（Memory Banking）
 10. 计时器（Timers）
