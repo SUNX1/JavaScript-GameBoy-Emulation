@@ -7,18 +7,17 @@
 5. [整合（Integration）](/JavaScript模拟GameBoy-整合.md)
 6. [输入（Input）](/JavaScript模拟GameBoy-输入.md)
 7. [精灵（Sprites）](/JavaScript模拟GameBoy-精灵.md)
-8. 中断（Interrupts）
+8. [中断（Interrupts）](/JavaScript模拟GameBoy-中断.md)
 9. 内存持久化（Memory Banking）
 10. 计时器（Timers）
 
 本系列文章的模拟器代码：[http://github.com/Two9A/jsGB](http://github.com/Two9A/jsGB)
-也可以参考[https://github.com/endrift/gbajs](https://github.com/endrift/gbajs)
 
 作者：Imran Nazar <tf@imrannazar.com>
 翻译：SUNX <me@sunx.site>
 原文：[GameBoy Emulation in JavaScript](http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-The-CPU)
 
-仅供参考学习，著作权归原作者Imran Nazar所有，商业转载请联系原作者获得授权。
+仅供参考学习，著作权归原作者[Imran Nazar](http://imrannazar.com)所有，商业转载请联系原作者获得授权。
 
 
 
