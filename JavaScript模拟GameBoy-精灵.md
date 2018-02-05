@@ -144,8 +144,155 @@ GameBoy可以在名为对象属性内存（OAM）的专用内存区域内存储4
         }
 
 ## 渲染精灵
+GameBoy图形系统逐行渲染屏幕，其中不仅包括背景，还包括其下的精灵。换句话说，绘制背景之后，必须将渲染精灵添加到扫描线渲染器。和背景一样，LCDC寄存器中有一个开关来激活精灵，这必须添加到GPU的I/O处理中。
 
+因为精灵可以在包括屏幕外的任何位置，渲染器必须检查有哪些精灵位于当前扫描线内。最简单的算法是检查每一个精灵的位置，如果它落在扫描线范围内，则渲染适当的精灵的线。通过预先计算的图块集，可以使用与背景相同的方式来检索精灵数据。下面这个例子囊括了上面提到的过程的实现：
 
+    GPU.js: 渲染一个有精灵的扫描线
+        renderscan: function()
+        {
+
+            // 供精灵渲染器使用的扫描线数据
+    	var scanrow = [];
+    
+            // 如果它打开则渲染背景
+            if(GPU._switchbg)
+    	{
+    	    var mapoffs = GPU._bgmap ? 0x1C00 : 0x1800;
+    	    mapoffs += ((GPU._line + GPU._scy) & 255) >> 3;
+    	    var lineoffs = (GPU._scx >> 3);
+    	    var y = (GPU._line + GPU._scy) & 7;
+    	    var x = GPU._scx & 7;
+    	    var canvasoffs = GPU._line * 160 * 4;
+    	    var colour;
+    	    var tile = GPU._vram[mapoffs + lineoffs];
+    
+    	    // 如果使用的是图块数据集 #1，标记索引
+    	    // 计算真实的图块偏移量
+    	    if(GPU._bgtile == 1 && tile < 128) tile += 256;
+    
+    	    for(var i = 0; i < 160; i++)
+    	    {
+
+    	        // 通过调色板重映射图块像素
+    	        colour = GPU._pal.bg[GPU._tileset[tile][y][x]];
+    
+    	        // 绘制像素到canvas
+    	        GPU._scrn.data[canvasoffs+0] = colour[0];
+    	        GPU._scrn.data[canvasoffs+1] = colour[1];
+    	        GPU._scrn.data[canvasoffs+2] = colour[2];
+    	        GPU._scrn.data[canvasoffs+3] = colour[3];
+    	        canvasoffs += 4;
+    
+    		// 存储像素以供稍后检查
+    		scanrow[i] = GPU._tileset[tile][y][x];
+    
+    	        // 当前图块结束时，读取另一个图块
+    	        x++;
+    	        if(x == 8)
+    	        {
+    	    	    x = 0;
+    	    	    lineoffs = (lineoffs + 1) & 31;
+    	    	    tile = GPU._vram[mapoffs + lineoffs];
+    	    	    if(GPU._bgtile == 1 && tile < 128) tile += 256;
+    	        }
+    	    }
+    	}
+    
+    	// 如果它们打开则渲染精灵
+    	if(GPU._switchobj)
+    	{
+    	    for(var i = 0; i < 40; i++)
+    	    {
+    	        var obj = GPU._objdata[i];
+    
+
+    		// 检查这个精灵是否落在这条扫描线上
+    		if(obj.y <= GPU._line && (obj.y + 8) > GPU._line)
+    		{
+    		    // 用于这个精灵的调色板
+    		    var pal = obj.pal ? GPU._pal.obj1 : GPU._pal.obj0;
+    
+            // 在canvas上渲染哪里
+    		    var canvasoffs = (GPU._line * 160 + obj.x) * 4;
+    
+    		    // 当前精灵的线的数据
+    		    var tilerow;
+    
+    		    // 如果精灵进行了Y翻转，使用图块的另一面
+    		    if(obj.yflip)
+    		    {
+    		        tilerow = GPU._tileset[obj.tile]
+    			                      [7 - (GPU._line - obj.y)];
+    		    }
+    		    else
+    		    {
+    		        tilerow = GPU._tileset[obj.tile]
+    			                      [GPU._line - obj.y];
+    		    }
+    
+    		    var colour;
+    		    var x;
+    
+    		    for(var x = 0; x < 8; x++)
+    		    {
+    		   // 如果这个像素还在屏幕内，且颜色不是0（透明），且精灵有优先级或显示在背景之下，则渲染像素
+    			if((obj.x + x) >= 0 && (obj.x + x) < 160 &&
+    			   tilerow[x] &&
+    			   (obj.prio || !scanrow[obj.x + x]))
+    			{
+    			    // 如果精灵经过X翻转，以相反的顺序写入像素
+    			    colour = pal[tilerow[obj.xflip ? (7-x) : x]];
+    
+    			    GPU._scrn.data[canvasoffs+0] = colour[0];
+    			    GPU._scrn.data[canvasoffs+1] = colour[1];
+    			    GPU._scrn.data[canvasoffs+2] = colour[2];
+    			    GPU._scrn.data[canvasoffs+3] = colour[3];
+    
+    			    canvasoffs += 4;
+    			}
+    		    }
+    		}
+    	    }
+    	}
+        },
+        
+        rb: function(addr)
+        {
+            switch(addr)
+    	{
+    	    // LCD控制
+    	    case 0xFF40:
+    	        return (GPU._switchbg  ? 0x01 : 0x00) |
+    		       (GPU._switchobj ? 0x02 : 0x00) |
+    		       (GPU._bgmap     ? 0x08 : 0x00) |
+    		       (GPU._bgtile    ? 0x10 : 0x00) |
+    		       (GPU._switchlcd ? 0x80 : 0x00);
+    
+    	    // ...
+    	}
+        },
+    
+        wb: function(addr, val)
+        {
+            switch(addr)
+    	{
+    	    // LCD控制
+    	    case 0xFF40:
+        	   GPU._switchbg  = (val & 0x01) ? 1 : 0;
+        		GPU._switchobj = (val & 0x02) ? 1 : 0;
+        		GPU._bgmap     = (val & 0x08) ? 1 : 0;
+        		GPU._bgtile    = (val & 0x10) ? 1 : 0;
+        		GPU._switchlcd = (val & 0x80) ? 1 : 0;
+        		break;
+    	    // ...
+    	}
+        }
+
+## 接下来
+实现精灵后，像井字棋这样的简单的游戏已经可以完整运行了，然而许多游戏需要确定屏幕合适可以重新绘制的方法才能运行。因为直到下一次GPU画出一帧时屏幕的改变才会显示出来，所以几乎所有游戏都会在屏幕垂直消隐时刷新屏幕数据。
+
+简单的游戏和demo有时是通过检查GPU的绘制过程是否达到了第144行来实现这一机制的，但这在重复循环中占用了很多处理能力。更常见的方式是当事件发生时通知游戏，这个消息被称为中断。在下一篇中，我们将关注垂直消隐中断，以及如何模拟将消息传递给模拟的游戏。
 
 > 原文链接：[GameBoy Emulation in JavaScript: Sprites](http://imrannazar.com/GameBoy-Emulation-in-JavaScript:-Sprites)
 
