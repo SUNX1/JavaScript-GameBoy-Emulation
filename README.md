@@ -8,7 +8,7 @@
 6. [输入（Input）](/JavaScript模拟GameBoy-输入.md)
 7. [精灵（Sprites）](/JavaScript模拟GameBoy-精灵.md)
 8. [中断（Interrupts）](/JavaScript模拟GameBoy-中断.md)
-9. 内存持久化（Memory Banking）
+9. [存储器存取（Memory Banking）](/JavaScript模拟GameBoy-存储器存取.md)
 10. [定时器（Timers）](/JavaScript模拟GameBoy-定时器.md)
 
 本系列文章的模拟器代码：[http://github.com/Two9A/jsGB](http://github.com/Two9A/jsGB)
